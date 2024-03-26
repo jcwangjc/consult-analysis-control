@@ -5,7 +5,7 @@ logging:
     root: info
 api:
   chat-gpt:
-    key: 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
+    key: #搞成你自己的api key
     point: https://api.openai.com/v1/chat/completions
     limit:
       permits: 500
