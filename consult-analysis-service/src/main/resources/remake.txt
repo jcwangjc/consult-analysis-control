@@ -1,0 +1,38 @@
+===文档===
+https://platform.openai.com/docs/overview
+
+===测试用的api-key====
+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
+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
+
+curl https://api.openai.com/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer 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"   -d '{
+    "model": "gpt-3.5-turbo-0125",
+    "messages": [
+      {
+        "role": "system",
+        "content": "您将收到一条推文，您的任务是将其情绪分类为积极、中性或消极。"
+      },
+      {
+        "role": "user",
+        "content": "我喜欢新的蝙蝠侠电影！"
+      }
+    ]
+  }'
+
+===限流===
+1、速率限制是在组织级别而不是用户级别施加的，就是说按账户限流，而不是按token限流的。
+2、账号每月可以在 API 上花费的总金额也受到限制。这些也称为“使用限制”。
+===充钱===
+1、充钱就能够升级
+https://platform.openai.com/account/billing/overview
+2、充钱升级规则
+https://platform.openai.com/docs/guides/rate-limits?context=tier-one
+
+
+====kafka测试====
+--生产者:
+./bin/kafka-console-producer.sh --broker-list 172.31.31.101:30092 --topic consult-analysis-control-topic
+--消费者:
+./bin/kafka-console-consumer.sh --bootstrap-server 172.31.31.101:30092 --topic consult-analysis-control-result-topic2
+
+{"analyzeType":"INFORMATION","author":"oldleek.eth","content":"随着 SOL 价格突破 200 美元，Solana 一词在谷歌趋势的搜索热度已达到 100，创下该词 Solana 搜索趋势 5 年以来的历史最高值，此前最高为 2021 年 9 月上旬的搜索热度 84。","img":"https://newbit-s3-saas.s3.ap-southeast-1.amazonaws.com/banner1-7.png","lang":"CHINESE","title":"test","publishTime":1709803816351,"sourceLink":"https://www.google.cn/"}

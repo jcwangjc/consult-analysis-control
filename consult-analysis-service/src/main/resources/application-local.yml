@@ -1,0 +1,64 @@
+server:
+  port: 3322
+logging:
+  level:
+    root: info
+api:
+  chat-gpt:
+    key: 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
+    point: https://api.openai.com/v1/chat/completions
+    limit:
+      permits: 500
+      interval: 1
+      key: chat-gpt-limit
+      address: redis://localhost:6379
+    role-system:
+      system-message-no-result: no-result
+      system-message-related: 是否相关
+      system-message-result: 分析结果
+      system-message-mood: 情绪类型
+      system-message: 您是一个区块链行业领导者，您将收到一条推文，您的任务是判断是否和金融市场或者区块链市场相关，相关则用中文分析推文对市场的影响，同时判断推文情绪为'积极'、'消极'还是'中性'，否则回答'${api.chat-gpt.role-system.system-message-no-result}'。最终用{'${api.chat-gpt.role-system.system-message-related}':相关,'${api.chat-gpt.role-system.system-message-result}':分析结果,'${api.chat-gpt.role-system.system-message-mood}':情绪类型}的JSON格式返回给我
+      system-message-explain: 您会收到一个区块链行业名词，请对概念和特点仔细解释
+      system-translate-message-replace: replace
+      system-translate-message: 帮我用中文、英文、泰文分别进行翻译，用${api.chat-gpt.role-system.system-translate-message-replace}的JSON数据格式返回
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=utf-8&&zeroDateTimeBehavior=convertToNull&rewritebatchedstatements=true
+    username: root
+    password: 12345678
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      time-between-eviction-runs-millis: 300000
+  kafka:
+    bootstrap-servers: 172.31.31.101:30092,172.31.31.101:30093,172.31.31.101:30094
+    producer:
+      retries: 0
+      batch-size: 16384
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: 1
+      topic: consult-analysis-control-result-topic2
+    consumer:
+      auto-commit-interval: 1S
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      topic: consult-analysis-control-topic2
+      group-id: consult-analysis-control-group2
+    listener:
+      concurrency: 3
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.consult.analysis.service.domain
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+  global-config:
+    db-config:
+      id-type: assign_id
+    db-column-underline: true
+    id-type: 0
